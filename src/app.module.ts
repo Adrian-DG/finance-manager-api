@@ -3,6 +3,7 @@ import { AccountModule } from './account/account.module';
 import { SharedModule } from './shared/shared.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { join } from 'path';
+import { IncomeModule } from './income/income.module';
 
 @Module({
   imports: [
@@ -16,6 +17,7 @@ import { join } from 'path';
     }),
     AccountModule,
     SharedModule,
+    IncomeModule,
   ],
 })
 export class AppModule {}
