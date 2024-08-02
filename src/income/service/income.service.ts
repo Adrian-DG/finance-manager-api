@@ -80,4 +80,17 @@ export class IncomeService {
   async delete(id: number): Promise<DeleteResult> {
     return await this._incomes.delete(id);
   }
+
+  async findAllIncomesByAccount() {
+    const result = await this._incomes.manager.query(`
+      select
+      a.name as income,
+      count(i.id) as total from incomes as i
+      inner join accounts as a on a.id = i.accountId
+      group by a.name
+      order by a.name asc
+    `);
+
+    return result;
+  }
 }

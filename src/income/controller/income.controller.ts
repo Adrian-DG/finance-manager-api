@@ -27,6 +27,12 @@ export class IncomeController {
     return result;
   }
 
+  @Get('stats')
+  async findAllIncomesByAccount() {
+    const result = await this.incomeService.findAllIncomesByAccount();
+    return result;
+  }
+
   @Get()
   async findAll(@Query() filters: PaginationFilter) {
     const result = await this.incomeService.findAll(filters);
