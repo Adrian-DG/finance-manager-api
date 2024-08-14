@@ -85,12 +85,21 @@ export class IncomeService {
     const result = await this._incomes.manager.query(`
       select
       a.name as income,
-      count(i.id) as total from incomes as i
+      count(i.id) as total 
+      from incomes as i
       inner join accounts as a on a.id = i.accountId
       group by a.name
       order by a.name asc
     `);
 
     return result;
+  }
+
+  async applyIncomeToAccount(id: number, ammount: number) {
+    const foundIncome = await this._incomes.findOneBy({ id });
+    return await this._accounts.increaseSavingAmmount(
+      foundIncome.account.id,
+      ammount,
+    );
   }
 }
