@@ -14,7 +14,7 @@ import { UserModule } from './user/user.module';
       type: 'better-sqlite3',
       database: '.db/data.sqlite3',
       autoLoadEntities: true,
-      synchronize: false,
+      synchronize: true,
       entities: [join(__dirname, '**', '*.entity.{js, ts}')],
       logging: true,
     }),

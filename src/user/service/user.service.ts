@@ -1,7 +1,7 @@
 import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { User } from '../entity/user.entity';
-import { Repository } from 'typeorm';
+import { Like, Repository } from 'typeorm';
 import { emit } from 'process';
 import { CreateUser } from '../dto/create-user.dto';
 
@@ -11,8 +11,20 @@ export class UserService {
     @InjectRepository(User) private readonly _users: Repository<User>,
   ) {}
 
-  async findOneBy(username: string) {
-    return this._users.findOneBy({ username });
+  async confirmUserExists(usernameHash: string): Promise<boolean> {
+    return await this._users.exists({
+      where: {
+        username: Like(`${usernameHash}|%`),
+      },
+    });
+  }
+
+  async findOne(usernameHash: string) {
+    return this._users.findOne({
+      where: {
+        username: Like(`${usernameHash}|%`),
+      },
+    });
   }
 
   async create(createUserDto: CreateUser) {
