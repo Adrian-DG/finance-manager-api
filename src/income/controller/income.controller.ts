@@ -8,6 +8,7 @@ import {
   Post,
   Put,
   Query,
+  Req,
 } from '@nestjs/common';
 import { IncomeService } from '../service/income.service';
 import { ApiBody, ApiParam, ApiQuery, ApiTags } from '@nestjs/swagger';
@@ -23,14 +24,19 @@ export class IncomeController {
 
   @Post()
   @ApiBody({ type: () => CreateIncome })
-  async create(@Body() createAccount: CreateIncome) {
-    const result = await this.incomeService.create(createAccount);
+  async create(@Body() createAccount: CreateIncome, @Req() req) {
+    const result = await this.incomeService.create(
+      createAccount,
+      req?.user?.sub as number,
+    );
     return result;
   }
 
   @Get('stats')
-  async findAllIncomesByAccount() {
-    const result = await this.incomeService.findAllIncomesByAccount();
+  async findAllIncomesByAccount(@Req() req) {
+    const result = await this.incomeService.findAllIncomesByAccount(
+      req?.user?.sub as number,
+    );
     return result;
   }
 

@@ -8,6 +8,7 @@ import {
   Post,
   Put,
   Query,
+  Req,
 } from '@nestjs/common';
 import { ApiBody, ApiParam, ApiQuery, ApiTags } from '@nestjs/swagger';
 import { AccountService } from '../service/account.service';
@@ -15,7 +16,6 @@ import { CreateAccount } from '../dto/create-account.dto';
 import { PaginationFilter } from 'src/shared/dto/pagination-filter.dto';
 import { UpdateAccount } from '../dto/update-account.dto';
 import { UnAppliedAmmount } from 'src/shared/dto/applied-ammount.dto';
-import { Public } from 'src/auth/strategy/public-access.strategy';
 
 @ApiTags('Accounts')
 @Controller('accounts')
@@ -24,14 +24,20 @@ export class AccountController {
 
   @Post()
   @ApiBody({ type: () => CreateAccount })
-  async create(@Body() createAccount: CreateAccount) {
-    const result = await this.accountService.create(createAccount);
+  async create(@Body() createAccount: CreateAccount, @Req() req) {
+    const result = await this.accountService.create(
+      createAccount,
+      req?.user?.sub as number,
+    );
     return result;
   }
 
   @Get()
-  async findAll(@Query() filter: PaginationFilter) {
-    const result = await this.accountService.findAll(filter);
+  async findAll(@Query() filter: PaginationFilter, @Req() req) {
+    const result = await this.accountService.findAll(
+      filter,
+      req?.user?.sub as number,
+    );
     return result;
   }
 

@@ -17,7 +17,7 @@ export class IncomeService {
     private readonly _accounts: AccountService,
   ) {}
 
-  async create(createIncome: CreateIncome): Promise<Income> {
+  async create(createIncome: CreateIncome, userId: number): Promise<Income> {
     const foundAccount =
       createIncome.accountId > 0
         ? await this._accounts.findOne(createIncome.accountId)
@@ -25,6 +25,7 @@ export class IncomeService {
     const newIncome = await this._incomes.create({
       ...createIncome,
       account: foundAccount,
+      userId: userId,
     });
     return this._incomes.save(newIncome);
   }
@@ -83,13 +84,14 @@ export class IncomeService {
     return await this._incomes.delete(id);
   }
 
-  async findAllIncomesByAccount() {
+  async findAllIncomesByAccount(userId: number) {
     const result = await this._incomes.manager.query(`
       select
       a.name as income,
       count(i.id) as total 
       from incomes as i
       inner join accounts as a on a.id = i.accountId
+      where i.userId = ${userId} and a.userId = ${userId}
       group by a.name
       order by a.name asc
     `);

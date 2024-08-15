@@ -10,4 +10,7 @@ export abstract class AuditableMetadata extends EntityMetadata {
 
   @Column({ type: 'bit' })
   isDelete: boolean;
+
+  @Column()
+  userId: number;
 }

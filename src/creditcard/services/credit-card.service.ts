@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { CreditCard } from '../entities/credit-card.entity';
-import { Repository } from 'typeorm';
+import { And, Equal, Repository } from 'typeorm';
 import { CreateCreditCard } from '../dto/create-credit-card.dto';
 import { UpdateCreditCard } from '../dto/update-credit-card.dto';
 
@@ -11,9 +11,9 @@ export class CreditCardService {
     @InjectRepository(CreditCard) private _credictCards: Repository<CreditCard>,
   ) {}
 
-  async findAll() {
+  async findAll(userId: number) {
     return await this._credictCards.find({
-      where: { status: true },
+      where: { status: true, userId: And(Equal(userId)) },
       order: { name: 'asc' },
       select: {
         id: true,
@@ -39,10 +39,11 @@ export class CreditCardService {
     });
   }
 
-  async create(model: CreateCreditCard) {
+  async create(model: CreateCreditCard, userId: number) {
     const card = this._credictCards.create({
       ...model,
       availableAmmount: model.approvedAmmount,
+      userId: userId,
     });
     return await this._credictCards.save(card);
   }

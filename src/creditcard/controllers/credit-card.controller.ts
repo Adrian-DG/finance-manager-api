@@ -7,6 +7,7 @@ import {
   Post,
   Put,
   Query,
+  Req,
 } from '@nestjs/common';
 import { ApiParam, ApiTags } from '@nestjs/swagger';
 import { PaginationFilter } from 'src/shared/dto/pagination-filter.dto';
@@ -20,8 +21,10 @@ export class CreditCardController {
   constructor(private readonly _creditCardService: CreditCardService) {}
 
   @Get()
-  async findAll() {
-    const result = await this._creditCardService.findAll();
+  async findAll(@Req() req) {
+    const result = await this._creditCardService.findAll(
+      req?.user?.sub as number,
+    );
     return result;
   }
 
@@ -33,8 +36,11 @@ export class CreditCardController {
   }
 
   @Post()
-  async create(@Body() model: CreateCreditCard) {
-    const result = await this._creditCardService.create(model);
+  async create(@Body() model: CreateCreditCard, @Req() req) {
+    const result = await this._creditCardService.create(
+      model,
+      req?.user?.sub as number,
+    );
     return result;
   }
 

@@ -2,7 +2,9 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Account } from '../entities/account.entity';
 import {
+  And,
   DeleteResult,
+  Equal,
   FindOptionsWhere,
   Like,
   Repository,
@@ -19,17 +21,24 @@ export class AccountService {
     @InjectRepository(Account) private readonly _accounts: Repository<Account>,
   ) {}
 
-  async create(createAccount: CreateAccount): Promise<Account> {
+  async create(createAccount: CreateAccount, userId: number): Promise<Account> {
     const newAccount = await this._accounts.create({
       name: createAccount.name,
       savedAmmount: createAccount.ammount,
+      userId: userId,
     });
     return this._accounts.save(newAccount);
   }
 
-  async findAll(filters: PaginationFilter): Promise<PagedData<Account>> {
+  async findAll(
+    filters: PaginationFilter,
+    userId: number,
+  ): Promise<PagedData<Account>> {
     const [records, totalCount] = await this._accounts.findAndCount({
-      where: { name: Like(`%${filters.searchTerm ?? ''}%`) },
+      where: {
+        name: Like(`%${filters.searchTerm ?? ''}%`),
+        userId: And(Equal(userId)),
+      },
       skip: (filters.page - 1) * filters.size,
       take: filters.size,
       select: { id: true, name: true, savedAmmount: true },
