@@ -39,6 +39,7 @@ export class IncomeService {
         id: true,
         name: true,
         ammount: true,
+        frequency: true,
         account: {
           id: true,
           name: true,

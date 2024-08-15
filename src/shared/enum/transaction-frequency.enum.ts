@@ -1,0 +1,7 @@
+export enum TransactionFrequency {
+  ONE_TIME = 1,
+  DIARY,
+  WEEKLY_EACH_SEVEN_DAYS,
+  BIWEEKLY_EACH_FIFTEEN_DAYS,
+  MONTHLY_AT_THEN_OF_MONTH,
+}
