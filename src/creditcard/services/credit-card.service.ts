@@ -15,6 +15,14 @@ export class CreditCardService {
     return await this._credictCards.find({
       where: { status: true },
       order: { name: 'asc' },
+      select: {
+        id: true,
+        name: true,
+        approvedAmmount: true,
+        availableAmmount: true,
+        cutOffDate: true,
+        dueDate: true,
+      },
     });
   }
 

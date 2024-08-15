@@ -4,6 +4,6 @@ export abstract class EntityMetadata {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Column({ type: 'bit', default: true })
+  @Column({ default: true })
   status: boolean;
 }

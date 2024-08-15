@@ -14,6 +14,7 @@ import { AccountService } from '../service/account.service';
 import { CreateAccount } from '../dto/create-account.dto';
 import { PaginationFilter } from 'src/shared/dto/pagination-filter.dto';
 import { UpdateAccount } from '../dto/update-account.dto';
+import { UnAppliedAmmount } from 'src/shared/dto/applied-ammount.dto';
 
 @ApiTags('Accounts')
 @Controller('accounts')

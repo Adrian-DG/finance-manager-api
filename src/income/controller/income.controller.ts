@@ -14,6 +14,7 @@ import { ApiBody, ApiParam, ApiQuery, ApiTags } from '@nestjs/swagger';
 import { PaginationFilter } from 'src/shared/dto/pagination-filter.dto';
 import { CreateIncome } from '../dto/create-income.dto';
 import { UpdateIncome } from '../dto/update-income.dto';
+import { UnAppliedAmmount } from 'src/shared/dto/applied-ammount.dto';
 
 @ApiTags('Incomes')
 @Controller('incomes')
@@ -64,13 +65,16 @@ export class IncomeController {
     return result;
   }
 
-  @Post(':id/apply-income-to-account')
+  @Put(':id/apply-income-to-account')
   @ApiParam({ name: 'id', type: Number, required: true })
   async applyIncomeToAccount(
     @Param(new ParseIntPipe()) id: number,
-    @Body() ammount: number,
+    @Body() UnAppliedAmmount: UnAppliedAmmount,
   ) {
-    const result = await this.incomeService.applyIncomeToAccount(id, ammount);
+    const result = await this.incomeService.applyIncomeToAccount(
+      id,
+      UnAppliedAmmount.ammount,
+    );
     return result;
   }
 }

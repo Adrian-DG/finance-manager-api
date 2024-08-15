@@ -38,6 +38,7 @@ export class IncomeService {
       select: {
         id: true,
         name: true,
+        ammount: true,
         account: {
           id: true,
           name: true,

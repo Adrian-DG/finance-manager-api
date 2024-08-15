@@ -32,6 +32,7 @@ export class AccountService {
       where: { name: Like(`%${filters.searchTerm ?? ''}%`) },
       skip: (filters.page - 1) * filters.size,
       take: filters.size,
+      select: { id: true, name: true, savedAmmount: true },
       order: { name: 'ASC' },
     });
 
