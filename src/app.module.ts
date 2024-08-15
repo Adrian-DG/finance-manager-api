@@ -5,6 +5,8 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { join } from 'path';
 import { IncomeModule } from './income/income.module';
 import { CreditcardModule } from './creditcard/creditcard.module';
+import { AuthModule } from './auth/auth.module';
+import { UserModule } from './user/user.module';
 
 @Module({
   imports: [
@@ -20,6 +22,8 @@ import { CreditcardModule } from './creditcard/creditcard.module';
     SharedModule,
     IncomeModule,
     CreditcardModule,
+    AuthModule,
+    UserModule,
   ],
 })
 export class AppModule {}

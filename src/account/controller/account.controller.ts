@@ -15,6 +15,7 @@ import { CreateAccount } from '../dto/create-account.dto';
 import { PaginationFilter } from 'src/shared/dto/pagination-filter.dto';
 import { UpdateAccount } from '../dto/update-account.dto';
 import { UnAppliedAmmount } from 'src/shared/dto/applied-ammount.dto';
+import { Public } from 'src/auth/strategy/public-access.strategy';
 
 @ApiTags('Accounts')
 @Controller('accounts')
@@ -29,7 +30,6 @@ export class AccountController {
   }
 
   @Get()
-  // @ApiQuery({ type: PaginationFilter })
   async findAll(@Query() filter: PaginationFilter) {
     const result = await this.accountService.findAll(filter);
     return result;
