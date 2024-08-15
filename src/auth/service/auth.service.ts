@@ -55,7 +55,9 @@ export class AuthService {
     const decryptedUsername = await security.decrypt(foundUser.username);
 
     const payload = { sub: foundUser.id, username: decryptedUsername };
-    const token = await this._jwt.signAsync(payload);
+    const token = await this._jwt.signAsync(payload, {
+      secret: process.env.JWT_KEY,
+    });
 
     return { access_token: token } as AuthenticatedResponse;
   }
