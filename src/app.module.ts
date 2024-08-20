@@ -8,6 +8,7 @@ import { CreditcardModule } from './creditcard/creditcard.module';
 import { AuthModule } from './auth/auth.module';
 import { UserModule } from './user/user.module';
 import { ConfigModule } from '@nestjs/config';
+import { APP_INTERCEPTOR } from '@nestjs/core';
 
 @Module({
   imports: [
@@ -29,5 +30,6 @@ import { ConfigModule } from '@nestjs/config';
     AuthModule,
     UserModule,
   ],
+  providers: [],
 })
 export class AppModule {}
