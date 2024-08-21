@@ -20,6 +20,7 @@ export class CustomExceptionFilter implements ExceptionFilter {
     let ex: ApiResponse<any> = {
       title: 'Error',
       code: response.statusCode,
+      status: false,
     };
 
     switch (statusCode) {
