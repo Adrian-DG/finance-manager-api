@@ -17,37 +17,31 @@ export class CustomExceptionFilter implements ExceptionFilter {
     const response = context.getResponse<Response>();
     const statusCode = exception.getStatus();
 
-    let ex: ApiResponse<any> = {
+    const ex: ApiResponse<any> = {
       title: 'Error',
+      message: this.getMessage(response.statusCode, exception),
       code: response.statusCode,
       status: false,
       data: null,
     };
 
+    response.status(statusCode).json(ex);
+  }
+
+  getMessage(statusCode: number, exception: HttpException): string {
     switch (statusCode) {
       case HttpStatus.BAD_REQUEST:
-        ex.message = exception.message;
-        break;
+        return exception.message;
       case HttpStatus.UNAUTHORIZED:
-        ex.code = HttpStatus.UNAUTHORIZED;
-        ex.message = 'This user needs to be validated first';
-        break;
+        return 'This user needs to be validated first';
       case HttpStatus.FORBIDDEN:
-        ex.code = HttpStatus.FORBIDDEN;
-        ex.message =
-          'This user does not have the require permissions to access this resource';
-        break;
+        return 'This user does not have the require permissions to access this resource';
       case HttpStatus.NOT_FOUND:
-        ex.message = 'The resource you requested cannot be found';
-        break;
+        return 'The resource you requested cannot be found';
       case HttpStatus.REQUEST_TIMEOUT:
-        ex.message = 'The request took to long...';
-        break;
+        return 'The request took to long...';
       default:
-        ex.message = 'Something went wrong';
-        break;
+        return 'Something went wrong';
     }
-
-    response.status(statusCode).json(ex);
   }
 }
