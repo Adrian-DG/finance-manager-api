@@ -1,8 +1,15 @@
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
-import { ValidationPipe } from '@nestjs/common';
+import {
+  BadRequestException,
+  HttpStatus,
+  ValidationPipe,
+} from '@nestjs/common';
 import { CustomExceptionFilter } from './shared/Filters/custom-exception.filter';
+import { Console, error } from 'console';
+import { ValidationError } from 'class-validator';
+import { ApiResponse } from './shared/models/api-response.model';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule, { cors: true });
@@ -19,7 +26,29 @@ async function bootstrap() {
     jsonDocumentUrl: 'swagger/json',
   });
 
-  app.useGlobalPipes(new ValidationPipe());
+  app.useGlobalPipes(
+    new ValidationPipe({
+      errorHttpStatusCode: HttpStatus.BAD_REQUEST,
+      stopAtFirstError: true,
+      exceptionFactory: (errors: ValidationError[]) => {
+        const result = errors.flatMap((error: ValidationError) => {
+          const constraintKey = Object.keys(error.constraints);
+          return {
+            message: error.constraints[constraintKey[0]],
+          };
+        });
+
+        const error = Object.keys(result)
+          .map((key) => {
+            return `- ${result[key]['message']}.`;
+          })
+          .join('\n ');
+
+        return new BadRequestException(error);
+      },
+    }),
+  );
+
   app.useGlobalFilters(new CustomExceptionFilter());
 
   await app.listen(3000);

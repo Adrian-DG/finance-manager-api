@@ -7,7 +7,7 @@ import {
   Injectable,
 } from '@nestjs/common';
 import { Request, Response } from 'express';
-import { ServerResponse } from '../models/server-response.model';
+import { ApiResponse } from '../models/api-response.model';
 
 @Catch(HttpException)
 export class CustomExceptionFilter implements ExceptionFilter {
@@ -17,36 +17,33 @@ export class CustomExceptionFilter implements ExceptionFilter {
     const response = context.getResponse<Response>();
     const statusCode = exception.getStatus();
 
-    let serverResp: ServerResponse = {
+    let ex: ApiResponse<any> = {
       title: 'Error',
-      message: '',
-      status: false,
-      code: statusCode,
-      path: request.path,
+      code: response.statusCode,
     };
 
     switch (statusCode) {
       case HttpStatus.BAD_REQUEST:
-        serverResp.message = 'Request went wrong due to incorrect input';
+        ex.message = exception.message;
         break;
       case HttpStatus.UNAUTHORIZED:
-        serverResp.message = 'This user needs to be validated first';
+        ex.message = 'This user needs to be validated first';
         break;
       case HttpStatus.FORBIDDEN:
-        serverResp.message =
+        ex.message =
           'This user does not have the require permissions to access this resource';
         break;
       case HttpStatus.NOT_FOUND:
-        serverResp.message = 'The resource you requested cannot be found';
+        ex.message = 'The resource you requested cannot be found';
         break;
       case HttpStatus.REQUEST_TIMEOUT:
-        serverResp.message = 'The request took to long...';
+        ex.message = 'The request took to long...';
         break;
       default:
-        serverResp.message = 'Something went wrong';
+        ex.message = 'Something went wrong';
         break;
     }
 
-    response.status(statusCode).json(serverResp);
+    response.status(statusCode).json(ex);
   }
 }
