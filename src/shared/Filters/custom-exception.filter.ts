@@ -19,8 +19,8 @@ export class CustomExceptionFilter implements ExceptionFilter {
 
     const ex: ApiResponse<any> = {
       title: 'Error',
-      message: this.getMessage(response.statusCode, exception),
-      code: response.statusCode,
+      message: this.getMessage(statusCode, exception),
+      code: statusCode,
       status: false,
       data: null,
     };
