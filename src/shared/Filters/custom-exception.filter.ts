@@ -27,9 +27,11 @@ export class CustomExceptionFilter implements ExceptionFilter {
         ex.message = exception.message;
         break;
       case HttpStatus.UNAUTHORIZED:
+        ex.code = HttpStatus.UNAUTHORIZED;
         ex.message = 'This user needs to be validated first';
         break;
       case HttpStatus.FORBIDDEN:
+        ex.code = HttpStatus.FORBIDDEN;
         ex.message =
           'This user does not have the require permissions to access this resource';
         break;
