@@ -21,6 +21,7 @@ export class CustomExceptionFilter implements ExceptionFilter {
       title: 'Error',
       code: response.statusCode,
       status: false,
+      data: null,
     };
 
     switch (statusCode) {

@@ -10,6 +10,7 @@ import { CustomExceptionFilter } from './shared/Filters/custom-exception.filter'
 import { Console, error } from 'console';
 import { ValidationError } from 'class-validator';
 import { ApiResponse } from './shared/models/api-response.model';
+import { ApiResponseInterceptor } from './shared/interceptors/api-response.interceptor';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule, { cors: true });
@@ -48,6 +49,8 @@ async function bootstrap() {
       },
     }),
   );
+
+  app.useGlobalInterceptors(new ApiResponseInterceptor());
 
   app.useGlobalFilters(new CustomExceptionFilter());
 
