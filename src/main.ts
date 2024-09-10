@@ -12,6 +12,21 @@ import { ValidationError } from 'class-validator';
 import { ApiResponse } from './shared/models/api-response.model';
 import { ApiResponseInterceptor } from './shared/interceptors/api-response.interceptor';
 
+function customizeInputValidator(errors: ValidationError[]) {
+  const result = errors.flatMap((error: ValidationError) => {
+    const constraintKey = Object.keys(error.constraints);
+    return {
+      message: error.constraints[constraintKey[0]],
+    };
+  });
+
+  const error = Object.keys(result)
+    .map((key) => `- ${result[key]['message']}.`)
+    .join('\n ');
+
+  return new BadRequestException(error);
+}
+
 async function bootstrap() {
   const app = await NestFactory.create(AppModule, { cors: true });
 
@@ -31,22 +46,8 @@ async function bootstrap() {
     new ValidationPipe({
       errorHttpStatusCode: HttpStatus.BAD_REQUEST,
       stopAtFirstError: true,
-      exceptionFactory: (errors: ValidationError[]) => {
-        const result = errors.flatMap((error: ValidationError) => {
-          const constraintKey = Object.keys(error.constraints);
-          return {
-            message: error.constraints[constraintKey[0]],
-          };
-        });
-
-        const error = Object.keys(result)
-          .map((key) => {
-            return `- ${result[key]['message']}.`;
-          })
-          .join('\n ');
-
-        return new BadRequestException(error);
-      },
+      exceptionFactory: (errors: ValidationError[]) =>
+        customizeInputValidator(errors),
     }),
   );
 
