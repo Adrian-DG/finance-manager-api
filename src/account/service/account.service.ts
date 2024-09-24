@@ -37,7 +37,7 @@ export class AccountService {
     const [records, totalCount] = await this._accounts.findAndCount({
       where: {
         name: Like(`%${filters.searchTerm ?? ''}%`),
-        userId: And(Equal(userId)),
+        //userId: And(Equal(userId)),
       },
       skip: (filters.page - 1) * filters.size,
       take: filters.size,

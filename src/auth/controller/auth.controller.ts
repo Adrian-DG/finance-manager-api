@@ -63,6 +63,7 @@ export class AuthController {
   @UseGuards(AuthGuard)
   @Get('is-authenticated')
   validateAuthentication(@Request() req) {
+    console.log(req?.user);
     return req?.user;
   }
 }

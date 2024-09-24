@@ -8,7 +8,7 @@ import {
   Post,
   Put,
   Query,
-  Req,
+  Request,
 } from '@nestjs/common';
 import { ApiBody, ApiParam, ApiQuery, ApiTags } from '@nestjs/swagger';
 import { AccountService } from '../service/account.service';
@@ -25,7 +25,8 @@ export class AccountController {
 
   @Post()
   @ApiBody({ type: () => CreateAccount })
-  async create(@Body() createAccount: CreateAccount, @Req() req) {
+  async create(@Body() createAccount: CreateAccount, @Request() req) {
+    console.log(req?.user);
     const result = await this.accountService.create(
       createAccount,
       req?.user?.sub as number,
@@ -35,10 +36,10 @@ export class AccountController {
 
   @Get()
   @Public()
-  async findAll(@Query() filter: PaginationFilter, @Req() req) {
+  async findAll(@Query() filter: PaginationFilter, @Request() req) {
     const result = await this.accountService.findAll(
       filter,
-      req?.user?.sub as number,
+      req?.user as number,
     );
     return result;
   }
