@@ -14,6 +14,7 @@ import { CreateAccount } from '../dto/create-account.dto';
 import { PaginationFilter } from 'src/shared/dto/pagination-filter.dto';
 import { PagedData } from 'src/shared/models/paged-data.model';
 import { UpdateAccount } from '../dto/update-account.dto';
+import { IAccountDetail } from '../models/account-detail.model';
 
 @Injectable()
 export class AccountService {
@@ -33,7 +34,7 @@ export class AccountService {
   async findAll(
     filters: PaginationFilter,
     userId: number,
-  ): Promise<PagedData<Account>> {
+  ): Promise<PagedData<IAccountDetail>> {
     const [records, totalCount] = await this._accounts.findAndCount({
       where: {
         name: Like(`%${filters.searchTerm ?? ''}%`),
@@ -49,7 +50,7 @@ export class AccountService {
       ...filters,
       records,
       totalCount,
-    } as PagedData<Account>;
+    } as PagedData<IAccountDetail>;
   }
 
   async findOne(id: number): Promise<Account> {
