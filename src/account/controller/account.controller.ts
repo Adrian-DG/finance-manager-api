@@ -29,13 +29,12 @@ export class AccountController {
     console.log(req?.user);
     const result = await this.accountService.create(
       createAccount,
-      req?.user?.sub as number,
+      req?.user as number,
     );
     return result;
   }
 
   @Get()
-  @Public()
   async findAll(@Query() filter: PaginationFilter, @Request() req) {
     const result = await this.accountService.findAll(
       filter,
