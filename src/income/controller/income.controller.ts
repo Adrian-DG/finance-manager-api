@@ -64,13 +64,6 @@ export class IncomeController {
     return result;
   }
 
-  @Delete(':id')
-  @ApiParam({ name: 'id', type: Number })
-  async delete(@Param('id', new ParseIntPipe()) id: number) {
-    const result = await this.incomeService.delete(id);
-    return result;
-  }
-
   @Put(':id/apply-income-to-account')
   @ApiParam({ name: 'id', type: Number, required: true })
   async applyIncomeToAccount(

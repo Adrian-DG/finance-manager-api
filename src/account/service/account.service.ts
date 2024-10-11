@@ -65,10 +65,6 @@ export class AccountService {
     return await this._accounts.update(id, updateAccount);
   }
 
-  async delete(id: number): Promise<DeleteResult> {
-    return await this._accounts.delete(id);
-  }
-
   async increaseSavingAmmount(id: number, ammount: number) {
     const foundAccount = await this._accounts.findOneBy({ id });
     foundAccount.savedAmmount += ammount;

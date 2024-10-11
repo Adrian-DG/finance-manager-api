@@ -60,11 +60,4 @@ export class AccountController {
     const result = await this.accountService.update(id, updateAccount);
     return result;
   }
-
-  @Delete(':id')
-  @ApiParam({ name: 'id', type: Number })
-  async delete(@Param('id', new ParseIntPipe()) id: number) {
-    const result = await this.accountService.delete(id);
-    return result;
-  }
 }

@@ -80,10 +80,6 @@ export class IncomeService {
     return await this._incomes.update(id, updateIncome);
   }
 
-  async delete(id: number): Promise<DeleteResult> {
-    return await this._incomes.delete(id);
-  }
-
   async findAllIncomesByAccount(userId: number) {
     const result = await this._incomes.manager.query(`
       select
