@@ -3,6 +3,7 @@ import {
   Controller,
   Delete,
   Get,
+  Inject,
   Param,
   ParseIntPipe,
   Post,
@@ -17,16 +18,22 @@ import { PaginationFilter } from 'src/shared/dto/pagination-filter.dto';
 import { UpdateAccount } from '../dto/update-account.dto';
 import { UnAppliedAmmount } from 'src/shared/dto/applied-ammount.dto';
 import { Public } from 'src/auth/strategy/public-access.strategy';
+import { CACHE_MANAGER } from '@nestjs/cache-manager';
+import { Cache } from 'cache-manager';
+import { PagedData } from 'src/shared/models/paged-data.model';
+import { IAccountDetail } from '../models/account-detail.model';
 
 @ApiTags('Accounts')
 @Controller('accounts')
 export class AccountController {
-  constructor(private readonly accountService: AccountService) {}
+  constructor(
+    private readonly accountService: AccountService,
+    @Inject(CACHE_MANAGER) private cacheManager: Cache,
+  ) {}
 
   @Post()
   @ApiBody({ type: () => CreateAccount })
   async create(@Body() createAccount: CreateAccount, @Request() req) {
-    console.log(req?.user);
     const result = await this.accountService.create(
       createAccount,
       req?.user as number,
@@ -36,10 +43,10 @@ export class AccountController {
 
   @Get()
   async findAll(@Query() filter: PaginationFilter, @Request() req) {
-    const result = await this.accountService.findAll(
-      filter,
-      req?.user as number,
-    );
+    let result = await this.cacheManager.get('accounts');
+    if (result) return result;
+    result = await this.accountService.findAll(filter, req?.user as number);
+    this.cacheManager.set('accounts', result);
     return result;
   }
 
