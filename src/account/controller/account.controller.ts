@@ -57,6 +57,14 @@ export class AccountController {
     return result;
   }
 
+  @Get('active-accounts')
+  async findActiveAccounts(@Request() req) {
+    const result = await this.accountService.findActiveAccounts(
+      req?.user as number,
+    );
+    return result;
+  }
+
   @Put(':id')
   @ApiParam({ name: 'id', type: Number })
   @ApiBody({ type: () => UpdateAccount })

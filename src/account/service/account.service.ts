@@ -15,6 +15,7 @@ import { PaginationFilter } from 'src/shared/dto/pagination-filter.dto';
 import { PagedData } from 'src/shared/models/paged-data.model';
 import { UpdateAccount } from '../dto/update-account.dto';
 import { IAccountDetail } from '../models/account-detail.model';
+import { SelectibleItem } from '../../shared/models/selectible-item.model';
 
 @Injectable()
 export class AccountService {
@@ -56,6 +57,15 @@ export class AccountService {
   async findOne(id: number): Promise<Account> {
     const result = await this._accounts.findOneBy({ id });
     return result;
+  }
+
+  async findActiveAccounts(userId: number) {
+    const result = await this._accounts.find({
+      where: { status: true, userId: And(Equal(userId)) },
+      select: { id: true, name: true },
+      order: { name: 'ASC' },
+    });
+    return result as SelectibleItem[];
   }
 
   async update(
